@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace guid_cli.Helper;
+namespace Helper;
 
 public static class ClipboardHelper
 {

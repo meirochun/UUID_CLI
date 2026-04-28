@@ -1,4 +1,4 @@
-﻿namespace guid_cli.Helper;
+﻿namespace Helper;
 
 public static class CliHelper
 {

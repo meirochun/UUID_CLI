@@ -1,4 +1,4 @@
-﻿using guid_cli.Helper;
+﻿using Helper;
 using System.CommandLine;
 
 var versionArgument = new Argument<string>(
