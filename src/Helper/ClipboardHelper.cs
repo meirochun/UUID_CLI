@@ -5,7 +5,7 @@ namespace Helper;
 
 public static class ClipboardHelper
 {
-    public static async Task SetText(string text)
+    public static async Task SetTextAsync(string text)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {

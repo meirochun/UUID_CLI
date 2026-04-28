@@ -33,7 +33,7 @@ mainCommand.SetHandler((version, upper, verbose) =>
         return;
     }
 
-    ClipboardHelper.SetText(guidString).Wait();
+    ClipboardHelper.SetTextAsync(guidString).Wait();
     CliHelper.DisplayGuid(guidString);
 },
 versionArgument,
