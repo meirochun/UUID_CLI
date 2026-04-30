@@ -1,25 +1,29 @@
 ﻿using Helper;
 using System.CommandLine;
 
-var versionArgument = new Argument<string>(
-    name: "version",
-    getDefaultValue: () => "v4",
-    description: "The version of UUID to generate");
+var versionsCommand = new Command("versions", "List all available UUID versions");
 
-var upperOption = new Option<bool>(
-    aliases: ["-upper"],
-    description: "Generates the UUID in uppercase");
-
-var verboseOption = new Option<bool>(
-    aliases: ["--verbose", "-v"],
-    description: "Enable verbose output");
-
-var mainCommand = new RootCommand("Generates a v4 or v7 UUID (default is v4)");
-mainCommand.AddArgument(versionArgument);
-
-mainCommand.SetHandler((version, upper, verbose) =>
+versionsCommand.SetHandler(() =>
 {
-    Guid guid = version.IsUUIDVersion7() ? Guid.CreateVersion7() : Guid.NewGuid();
+    Console.WriteLine("Available UUID Versions:");
+    Console.WriteLine("- v4: Randomly generated (Standard)");
+    Console.WriteLine("- v7: Time-ordered / Sortable (Better for Database Keys)");
+});
+
+var uuidVersionArgument = new Argument<string>("version",() => "v4", "The version of UUID to generate");
+var upperOption = new Option<bool>(["-u", "--uppercase"], "Generates a UUID in uppercase");
+var verboseOption = new Option<bool>(["--verbose"], "Enable verbose output");
+
+var rootCommand = new RootCommand("UUID Generator CLI");
+rootCommand.AddArgument(uuidVersionArgument);
+rootCommand.AddOption(upperOption);
+rootCommand.AddOption(verboseOption);
+
+rootCommand.AddCommand(versionsCommand);
+
+rootCommand.SetHandler(async (version, upper, verbose) =>
+{
+    Guid guid = version.Contains("v7") ? Guid.CreateVersion7() : Guid.NewGuid();
     string guidString = guid.ToString();
 
     if (upper)
@@ -33,11 +37,9 @@ mainCommand.SetHandler((version, upper, verbose) =>
         return;
     }
 
-    ClipboardHelper.SetTextAsync(guidString).Wait();
+    await ClipboardHelper.SetTextAsync(guidString);
     CliHelper.DisplayGuid(guidString);
 },
-versionArgument,
-upperOption,
-verboseOption);
+uuidVersionArgument, upperOption, verboseOption);
 
-return await mainCommand.InvokeAsync(args);
+return await rootCommand.InvokeAsync(args);
